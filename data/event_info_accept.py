@@ -8,7 +8,7 @@ class EventInfoAccept:
         self._bot_id = bot_id
 
     def get_type(self):
-        return self._event_info.type
+        return self._event_info.get_type()
 
     def get_socket(self):
         return self._socket
