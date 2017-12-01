@@ -1,5 +1,7 @@
 from Queue import Queue
 
+from data.event_type import EventType
+
 
 class EventRegistrar:
     def __init__(self):

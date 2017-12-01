@@ -21,9 +21,7 @@ class SlackBot(object):
             users = api_call.get('members')
             for user in users:
                 if 'name' in user and user.get('name') == self._bot_name:
-                    print "<@" + user.get('id') + ">"
-                    return "<@" + user.get('id') + ">"
-             
+                    return user.get('id')
             return None
              
     def listen(self):
