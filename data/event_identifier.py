@@ -2,7 +2,10 @@ from data.event_type import EventType
 
 
 class EventIdentifier:
-    event_to_phrases = {EventType.GOOD_MORNING: ["good morning", "morning"]}
+    event_to_phrases = {
+        EventType.GOOD_MORNING: ["good morning", "morning"],
+        EventType.HELP: ["what can you do", "help", "show me what you know"]
+    }
 
     def __init__(self):
         pass

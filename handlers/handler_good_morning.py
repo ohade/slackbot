@@ -1,5 +1,3 @@
-
-
 class HandlerGoodMorning:
     def __init__(self, event_info, event_registrar):
         self._event_info = event_info

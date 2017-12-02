@@ -2,7 +2,7 @@ from data.event_info import EventInfo
 from data.event_type import EventType
 
 
-class EventInfoAccept:
+class EventAccept:
     def __init__(self, bot_id, socket):
         self._event_info = EventInfo(EventType.ACCEPT, bot_id)
         self._socket = socket

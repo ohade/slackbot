@@ -1,5 +1,12 @@
-from selector import Selector
 from slackclient import SlackClient
+
+from data.event_type import EventType
+from events.event_accept import EventAccept
+from handlers.handler_accept import HandlerAccept
+from handlers.handler_good_morning import HandlerGoodMorning
+from handlers.handler_help import HandlerHelp
+from handlers.handler_other import HandlerOther
+from selector import Selector
 
 
 class SlackBot(object):
@@ -11,8 +18,8 @@ class SlackBot(object):
         if self._bot_id is None:
             exit("Error, could not find " + self._bot_name)
 
-        self.selector = Selector(self._slack_client, self._bot_id)
-        self.listen()
+        self._selector = Selector()
+        self._register_event()
      
     def _get_bot_id(self):
         api_call = self._slack_client.api_call("users.list")
@@ -27,6 +34,16 @@ class SlackBot(object):
     def listen(self):
         if self._slack_client.rtm_connect(with_team_state=False):
             print "Successfully connected, listening for commands"
-            self.selector.select()
+            while True:
+                it = self._selector.select()
+                it.handle()
         else:
             exit("Error, Connection Failed")
+
+    def _register_event(self):
+        event_registrar = self._selector.get_event_registrar()
+        event_registrar.register(EventType.ACCEPT, HandlerAccept)
+        event_registrar.register(EventType.GOOD_MORNING, HandlerGoodMorning)
+        event_registrar.register(EventType.HELP, HandlerHelp)
+        event_registrar.register(EventType.OTHER, HandlerOther)
+        event_registrar.add_event(EventAccept(self._bot_id, self._slack_client))

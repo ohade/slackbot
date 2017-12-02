@@ -1,8 +1,4 @@
-from data.event_identifier import EventIdentifier
-from data.event_info import EventInfo
-from data.event_info_good_morning import EventInfoGoodMorning
-from data.event_info_other import EventInfoOther
-from data.event_type import EventType
+from events.event_factory import EventFactory
 from utils import get_in_message_bot_id
 
 
@@ -10,16 +6,17 @@ class HandlerAccept:
     def __init__(self, event_info, event_registrar):
         self._event_info = event_info
         self._event_registrar = event_registrar
+        self._event_factory = EventFactory()
 
     def handle(self):
         socket = self._event_info.get_socket()
-        events = socket.rtm_read()
+        raw_events = socket.rtm_read()
 
-        if events and len(events) > 0:
-            for event in events:
-                if event['type'] != "message" or event['user'] == self._event_info.get_bot_id():
+        if raw_events and len(raw_events) > 0:
+            for raw_event in raw_events:
+                if raw_event['type'] != "message" or raw_event['user'] == self._event_info.get_bot_id():
                     continue
-                event = self._parse_event(event)
+                event = self._parse_event(raw_event)
                 if event:
                     self._event_registrar.add_event(event)
 
@@ -27,22 +24,10 @@ class HandlerAccept:
         # are done
         self._event_registrar.add_event(self._event_info)
 
-    def _parse_event(self, event):
+    def _parse_event(self, raw_event):
         bot_id = self._event_info.get_bot_id()
-        if event and 'text' in event and get_in_message_bot_id(bot_id) in event['text']:
-            event_type = EventIdentifier.identify(event['text'])
-            if event_type == EventType.GOOD_MORNING:
-                return EventInfoGoodMorning(self._event_info.get_bot_id(),
-                                            event['user'],
-                                            event['text'].split(bot_id)[1].strip().lower(),
-                                            event['channel'],
-                                            self._event_info.get_socket())
-            else:
-                return EventInfoOther(self._event_info.get_bot_id(),
-                                      event['user'],
-                                      event['text'].split(bot_id)[1].strip().lower(),
-                                      event['channel'],
-                                      self._event_info.get_socket())
+        if raw_event and 'text' in raw_event and get_in_message_bot_id(bot_id) in raw_event['text']:
+            return self._event_factory.get_event(raw_event, bot_id, self._event_info.get_socket())
         else:
-            print "Can't parse event", event
+            print "Can't parse event", raw_event
             return None
