@@ -1,5 +1,6 @@
 from slackclient import SlackClient
 
+from config import SLACKBOT_CLIENT_ACCESS_TOKEN
 from data.event_type import EventType
 from events.event_accept import EventAccept
 from handlers.handler_accept import HandlerAccept
@@ -14,7 +15,7 @@ class SlackBot(object):
         self._slack_client = SlackClient(slack_api_key)
         self._bot_name = "codebot"
         self._bot_id = self._get_bot_id()
-         
+        print self._bot_id
         if self._bot_id is None:
             exit("Error, could not find " + self._bot_name)
 
@@ -47,3 +48,8 @@ class SlackBot(object):
         event_registrar.register(EventType.HELP, HandlerHelp)
         event_registrar.register(EventType.OTHER, HandlerOther)
         event_registrar.add_event(EventAccept(self._bot_id, self._slack_client))
+
+
+if __name__ == "__main__":
+    bot = SlackBot(SLACKBOT_CLIENT_ACCESS_TOKEN)
+    bot.listen()
