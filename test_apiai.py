@@ -13,7 +13,7 @@ def simple_test():
 
     request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
 
-    request.query = "do you know anything?"
+    request.query = "booga booga"
     # request.query = "hello"
     response = request.getresponse()
 
@@ -36,7 +36,7 @@ def ifttt_test():
 
     # request.query = "do that great action after this beautiful action finishes"
     # request.query = "hello"
-    request.query = "Who are you?"
+    request.query = "if this then that"
     response = request.getresponse()
 
     # print response.read()
@@ -48,9 +48,12 @@ def ifttt_test():
         print "smalltalk", res["result"]["fulfillment"]["speech"]
     elif "input.unknown" == res["result"]["action"]:
         print "input.unknown"
+        print before_json
+        print res["result"]["fulfillment"]["messages"][0]["speech"]
     else:
-        print res["result"]["metadata"]["intentName"]
-        print res["result"]["fulfillment"]["speech"]
+        print res["result"]["metadata"]["intentName"] == "ifttt"
+        print "Action:", res["result"]["parameters"]["action"]
+        print "Condition:", res["result"]["parameters"]["condition"]
         print before_json
 
 
