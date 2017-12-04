@@ -1,4 +1,4 @@
-class HandlerOther:
+class HandlerSmalltalk:
     def __init__(self, event_info, event_registrar):
         self._event_info = event_info
         self._event_registrar = event_registrar

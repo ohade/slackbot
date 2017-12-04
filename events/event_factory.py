@@ -1,8 +1,7 @@
-from data.event_identifier import EventIdentifier
 from data.event_type import EventType
-from events.event_good_morning import EventGoodMorning
-from events.event_help import EventHelp
-from events.event_other import EventOther
+from events.event_generic import EventGeneric
+from external.event_identifier import EventIdentifier
+from utils import get_in_message_bot_id
 
 
 class EventFactory:
@@ -10,22 +9,39 @@ class EventFactory:
         pass
 
     def get_event(self, raw_event, bot_id, socket):
-        event_type = EventIdentifier.identify(raw_event['text'])
-        if event_type == EventType.GOOD_MORNING:
-            return EventGoodMorning(bot_id,
-                                    raw_event['user'],
-                                    raw_event['text'].split(bot_id)[1].strip().lower(),
-                                    raw_event['channel'],
-                                    socket)
+        clean_text = self._clean_raw_event(raw_event['text'], bot_id)
+        event_type, response = EventIdentifier.identify(clean_text)
+        if event_type == EventType.SMALLTALK:
+            return EventGeneric(EventType.SMALLTALK,
+                                bot_id,
+                                raw_event['user'],
+                                response,
+                                raw_event['channel'],
+                                socket)
         elif event_type == EventType.HELP:
-            return EventHelp(bot_id,
-                             raw_event['user'],
-                             raw_event['text'].split(bot_id)[1].strip().lower(),
-                             raw_event['channel'],
-                             socket)
+            return EventGeneric(EventType.HELP,
+                                bot_id,
+                                raw_event['user'],
+                                response,
+                                raw_event['channel'],
+                                socket)
+        elif event_type == EventType.IFTTT:
+            return EventGeneric(EventType.IFTTT,
+                                bot_id,
+                                raw_event['user'],
+                                response,
+                                raw_event['channel'],
+                                socket)
         else:
-            return EventOther(bot_id,
-                              raw_event['user'],
-                              raw_event['text'].split(bot_id)[1].strip().lower(),
-                              raw_event['channel'],
-                              socket)
+            return EventGeneric(EventType.OTHER,
+                                bot_id,
+                                raw_event['user'],
+                                response,
+                                raw_event['channel'],
+                                socket)
+
+    @staticmethod
+    def _clean_raw_event(raw_text, bot_id):
+        message_bot_id = get_in_message_bot_id(bot_id)
+        length_to_skip = len(message_bot_id)
+        return raw_text[length_to_skip+1:]

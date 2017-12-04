@@ -4,9 +4,10 @@ class HandlerHelp:
         self._event_registrar = event_registrar
 
     def handle(self):
+        response = self._event_info.get_response()
         self._event_info.get_socket().api_call("chat.postMessage",
                                                channel=self._event_info.get_channel(),
-                                               text="Currently noting :(",
+                                               text=response.params["msg"],
                                                as_user=True
                                                )
 # testing attachments

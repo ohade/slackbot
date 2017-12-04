@@ -1,10 +1,9 @@
 from data.event_info import EventInfo
-from data.event_type import EventType
 
 
-class EventHelp:
-    def __init__(self, bot_id, user, text, channel, socket):
-        self._event_info = EventInfo(EventType.HELP, bot_id, user, text, channel)
+class EventGeneric:
+    def __init__(self, event_type, bot_id, user, response, channel, socket):
+        self._event_info = EventInfo(event_type, bot_id, user, response, channel)
         self._socket = socket
 
     def get_type(self):
@@ -13,8 +12,8 @@ class EventHelp:
     def get_user(self):
         return self._event_info.user
 
-    def get_text(self):
-        return self._event_info.text
+    def get_response(self):
+        return self._event_info.response
 
     def get_channel(self):
         return self._event_info.channel

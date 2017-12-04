@@ -4,7 +4,8 @@ from config import SLACKBOT_CLIENT_ACCESS_TOKEN
 from data.event_type import EventType
 from events.event_accept import EventAccept
 from handlers.handler_accept import HandlerAccept
-from handlers.handler_good_morning import HandlerGoodMorning
+from handlers.handler_ifttt import HandlerIFTTT
+from handlers.handler_smalltalk import HandlerSmalltalk
 from handlers.handler_help import HandlerHelp
 from handlers.handler_other import HandlerOther
 from selector import Selector
@@ -44,7 +45,8 @@ class SlackBot(object):
     def _register_event(self):
         event_registrar = self._selector.get_event_registrar()
         event_registrar.register(EventType.ACCEPT, HandlerAccept)
-        event_registrar.register(EventType.GOOD_MORNING, HandlerGoodMorning)
+        event_registrar.register(EventType.SMALLTALK, HandlerSmalltalk)
+        event_registrar.register(EventType.IFTTT, HandlerIFTTT)
         event_registrar.register(EventType.HELP, HandlerHelp)
         event_registrar.register(EventType.OTHER, HandlerOther)
         event_registrar.add_event(EventAccept(self._bot_id, self._slack_client))
