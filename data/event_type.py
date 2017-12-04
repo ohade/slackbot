@@ -6,5 +6,6 @@ class EventType(Enum):
     SMALLTALK = 2
     HELP = 3
     IFTTT = 4
+    NOTIFY = 5
     OTHER = 100
 

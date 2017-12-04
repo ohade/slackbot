@@ -18,13 +18,16 @@ class EventIdentifierExternal:
 
         before_json = response.read()
         res = json.loads(before_json)
+        params = {"msg": res["result"]["fulfillment"]["messages"][0]["speech"]}
+
         if "smalltalk" in res["result"]["action"]:
-            return EventType.SMALLTALK, Response({"msg": res["result"]["fulfillment"]["speech"]})
+            return EventType.SMALLTALK, Response(params)
         if "ifttt" == res["result"]["metadata"]["intentName"]:
-            action = res["result"]["parameters"]["action"]
-            condition = res["result"]["parameters"]["condition"]
-            return EventType.IFTTT, Response({"condition": condition, "action": action})
+            return EventType.IFTTT, Response(res["result"]["parameters"])
         if "assist" == res["result"]["metadata"]["intentName"]:
-            return EventType.HELP, Response({"msg": res["result"]["fulfillment"]["messages"][0]["speech"]})
+            return EventType.HELP, Response(params)
+        if "notify" == res["result"]["metadata"]["intentName"]:
+            params.update(res["result"]["parameters"])
+            return EventType.NOTIFY, Response(params)
         if "input.unknown" == res["result"]["action"]:
-            return EventType.OTHER, Response({"msg": res["result"]["fulfillment"]["messages"][0]["speech"]})
+            return EventType.OTHER, Response(params)

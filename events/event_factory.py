@@ -32,6 +32,13 @@ class EventFactory:
                                 response,
                                 raw_event['channel'],
                                 socket)
+        elif event_type == EventType.NOTIFY:
+            return EventGeneric(EventType.NOTIFY,
+                                bot_id,
+                                raw_event['user'],
+                                response,
+                                raw_event['channel'],
+                                socket)
         else:
             return EventGeneric(EventType.OTHER,
                                 bot_id,
