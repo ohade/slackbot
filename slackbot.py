@@ -16,23 +16,29 @@ class SlackBot(object):
     def __init__(self, slack_api_key):
         self._slack_client = SlackClient(slack_api_key)
         self._bot_name = "codebot"
-        self._bot_id = self._get_bot_id()
-        print self._bot_id
+        self._bot_id = None
+        self._members = dict()
+
+        self._get_members_info()
+
         if self._bot_id is None:
             exit("Error, could not find " + self._bot_name)
 
         self._selector = Selector()
         self._register_event()
-     
-    def _get_bot_id(self):
+
+    def _get_members_info(self):
         api_call = self._slack_client.api_call("users.list")
+        print self._slack_client.api_call("im.list")
+        print self._slack_client.api_call("groups.list")
+
         if api_call.get('ok'):
-            # retrieve all users so we can find our bot
             users = api_call.get('members')
             for user in users:
-                if 'name' in user and user.get('name') == self._bot_name:
-                    return user.get('id')
-            return None
+                if 'name' in user:
+                    self._members[user.get('id')] = user['name']
+                    if user.get('name') == self._bot_name:
+                        self._bot_id = user.get('id')
              
     def listen(self):
         if self._slack_client.rtm_connect(with_team_state=False):
@@ -57,3 +63,6 @@ class SlackBot(object):
 if __name__ == "__main__":
     bot = SlackBot(SLACKBOT_CLIENT_ACCESS_TOKEN)
     bot.listen()
+
+
+# https://stackoverflow.com/questions/41111227/how-can-a-slack-bot-detect-a-direct-message-vs-a-message-in-a-channel
