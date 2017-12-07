@@ -11,6 +11,7 @@ class EventFactory:
     def get_event(self, raw_event, bot_id, socket):
         clean_text = self._clean_raw_event(raw_event['text'], bot_id)
         event_type, response = EventIdentifier.identify(clean_text)
+        print "In EventFactory, Channel:", raw_event['channel']
         if event_type == EventType.SMALLTALK:
             return EventGeneric(EventType.SMALLTALK,
                                 bot_id,
@@ -51,4 +52,7 @@ class EventFactory:
     def _clean_raw_event(raw_text, bot_id):
         message_bot_id = get_in_message_bot_id(bot_id)
         length_to_skip = len(message_bot_id)
-        return raw_text[length_to_skip+1:]
+        if message_bot_id in raw_text:
+            return raw_text[length_to_skip+1:]
+        else:
+            return raw_text

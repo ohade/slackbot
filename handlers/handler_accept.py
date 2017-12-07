@@ -26,7 +26,11 @@ class HandlerAccept:
 
     def _parse_event(self, raw_event):
         bot_id = self._event_info.get_bot_id()
-        if raw_event and 'text' in raw_event and get_in_message_bot_id(bot_id) in raw_event['text']:
+        if raw_event and 'text' in raw_event and (
+                    get_in_message_bot_id(bot_id) in raw_event['text'] or
+                    ("channel" in raw_event and
+                         self._event_info.is_member_of_channel(raw_event["channel"])
+                     )):
             return self._event_factory.get_event(raw_event, bot_id, self._event_info.get_socket())
         else:
             print "Can't parse event", raw_event
