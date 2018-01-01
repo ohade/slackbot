@@ -33,6 +33,10 @@ class SlackBot(object):
         api_call = self._slack_client.api_call("users.list")
         im_info = self._slack_client.api_call("im.list")
         groups_info = self._slack_client.api_call("groups.list")
+        all_groups_info = self._slack_client.api_call("channels.list")
+        for group in all_groups_info['channels']:
+            pass
+
         for im in im_info['ims']:
             self._im_bot_is_member[im['id']] = im['user']
 
