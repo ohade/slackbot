@@ -1,6 +1,7 @@
 from slackclient import SlackClient
 
 from config import SLACKBOT_CLIENT_ACCESS_TOKEN
+from config import SLACKBOT_CLIENT_NAME
 from data.event_type import EventType
 from events.event_accept import EventAccept
 from handlers.handler_accept import HandlerAccept
@@ -15,7 +16,7 @@ from selector import Selector
 class SlackBot(object):
     def __init__(self, slack_api_key):
         self._slack_client = SlackClient(slack_api_key)
-        self._bot_name = "codebot"
+        self._bot_name = SLACKBOT_CLIENT_NAME
         self._bot_id = None
         self._members = dict()
         self._channel_bot_is_member = dict()
