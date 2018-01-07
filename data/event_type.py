@@ -7,5 +7,7 @@ class EventType(Enum):
     HELP = 3
     IFTTT = 4
     NOTIFY = 5
+    REGISTER = 6
+
     OTHER = 100
 

@@ -1,0 +1,3 @@
+* work on register event, currently only print what i requested him to do
+* need to make sure the bot i requested to register exist
+* work on EventRegistrarItem to support repeat

@@ -3,10 +3,11 @@ from utils import get_in_message_bot_id
 
 
 class HandlerAccept:
-    def __init__(self, event_info, event_registrar):
+    def __init__(self, event_info, event_registrar, members):
         self._event_info = event_info
         self._event_registrar = event_registrar
         self._event_factory = EventFactory()
+        self._members = members
 
     def handle(self):
         socket = self._event_info.get_socket()
@@ -24,13 +25,22 @@ class HandlerAccept:
         # are done
         self._event_registrar.add_event(self._event_info)
 
+    # this method is to make sure the bot answer even if not writen @<bot_name>, but it needs more work...
+    # def _parse_event(self, raw_event):
+    #     bot_id = self._event_info.get_bot_id()
+    #     if raw_event and 'text' in raw_event and (
+    #                 get_in_message_bot_id(bot_id) in raw_event['text'] or
+    #                 ("channel" in raw_event and
+    #                      self._event_info.is_member_of_channel(raw_event["channel"])
+    #                  )):
+    #         return self._event_factory.get_event(raw_event, bot_id, self._event_info.get_socket())
+    #     else:
+    #         print "Can't parse event", raw_event
+    #         return None
+
     def _parse_event(self, raw_event):
         bot_id = self._event_info.get_bot_id()
-        if raw_event and 'text' in raw_event and (
-                    get_in_message_bot_id(bot_id) in raw_event['text'] or
-                    ("channel" in raw_event and
-                         self._event_info.is_member_of_channel(raw_event["channel"])
-                     )):
+        if raw_event and 'text' in raw_event and get_in_message_bot_id(bot_id) in raw_event['text']:
             return self._event_factory.get_event(raw_event, bot_id, self._event_info.get_socket())
         else:
             print "Can't parse event", raw_event
