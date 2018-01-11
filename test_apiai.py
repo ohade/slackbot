@@ -36,7 +36,7 @@ def ifttt_test():
 
     # request.query = "do that great action after this beautiful action finishes"
     # request.query = "hello"
-    request.query = "if this then that"
+    request.query = "let me know when the test passes"
     response = request.getresponse()
 
     # print response.read()
@@ -44,17 +44,22 @@ def ifttt_test():
     print type(response)
     before_json = response.read()
     res = json.loads(before_json)
-    if "smalltalk" in res["result"]["action"]:
-        print "smalltalk", res["result"]["fulfillment"]["speech"]
-    elif "input.unknown" == res["result"]["action"]:
-        print "input.unknown"
-        print before_json
-        print res["result"]["fulfillment"]["messages"][0]["speech"]
-    else:
-        print res["result"]["metadata"]["intentName"] == "ifttt"
-        print "Action:", res["result"]["parameters"]["action"]
-        print "Condition:", res["result"]["parameters"]["condition"]
-        print before_json
+    print before_json
+    print res["result"]["metadata"]["intentName"]
+    print res["result"]["parameters"]
+    print res["result"]["fulfillment"]["messages"][0]["speech"]
+
+    # if "smalltalk" in res["result"]["action"]:
+    #     print "smalltalk", res["result"]["fulfillment"]["speech"]
+    # elif "input.unknown" == res["result"]["action"]:
+    #     print "input.unknown"
+    #     print before_json
+    #     print res["result"]["fulfillment"]["messages"][0]["speech"]
+    # else:
+    #     print res["result"]["metadata"]["intentName"] == "ifttt"
+    #     print "Action:", res["result"]["parameters"]["action"]
+    #     print "Condition:", res["result"]["parameters"]["condition"]
+    #     print before_json
 
 
 if __name__ == '__main__':

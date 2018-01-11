@@ -29,5 +29,8 @@ class EventIdentifierExternal:
         if "notify" == res["result"]["metadata"]["intentName"]:
             params.update(res["result"]["parameters"])
             return EventType.NOTIFY, Response(params)
+        if "register" == res["result"]["metadata"]["intentName"]:
+            params.update(res["result"]["parameters"])
+            return EventType.REGISTER, Response(params)
         if "input.unknown" == res["result"]["action"]:
             return EventType.OTHER, Response(params)
